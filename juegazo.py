@@ -154,6 +154,12 @@ class Fondo():
         self.imagen2 = pygame.transform.scale(img,(Resolucion[0],Resolucion[1]))
 
 #-----------#
+# Variables #
+#-----------#
+
+caption = "Super Paralympics 2D Simulator 2017"
+
+#-----------#
 # Principal #
 #-----------#
 
@@ -165,7 +171,7 @@ def menu():
     h = Resolucion[1]
     
     screen = pygame.display.set_mode((w,h))
-    pygame.display.set_caption("Super Paralympics 2D Simulator 2017")
+    pygame.display.set_caption(caption)
     clock = pygame.time.Clock()
     
     imagenJugar1 = pygame.image.load("Boton Jugar 1 Prueba.png")
@@ -218,11 +224,13 @@ def main():
     clock = pygame.time.Clock()
     #pygame.mouse.set_visible(False)
     
+    #FORMATO: Texto, Fuente, Sistema, Tamaño, Color RGB
     macrosoft = Texto("Macrosoft Ltda. Presenta:","Ubuntu",True,20,(0,0,0))
     superw = Texto("Super Paralympics 2D","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
     superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))  
     demo = Texto("","Ubuntu",True,10,(0,0,0))
     FPS = Texto("FPS","Ubuntu",True,30,(0,0,0))
+    elGanador = Texto("Ganador: ","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
@@ -320,15 +328,27 @@ def main():
         if Jugadores == 2:  
             diferenciaPosicion = jugador1.posicion - jugador2.posicion
             #diferenciaVelocidad = jugador1.velocidad - jugador2.velocidad
+            ganador = jugador1
                 
             if diferenciaPosicion > 0: #Jugador 1 Ganando
                 jugador2.rect.left = jugador2.posCero - diferenciaPosicion
-                velocidadTotal = jugador1.velocidad
+                ganador = jugador1
             elif diferenciaPosicion < 0:
                 jugador1.rect.left = jugador1.posCero + diferenciaPosicion
-                velocidadTotal = jugador2.velocidad
+                ganador = jugador2
+                
         else:
-            velocidadTotal = jugador1.velocidad
+            ganador = jugador1
+        
+        velocidadTotal = ganador.velocidad
+        
+        if ganador.posicion >= 3000:
+            if ganador == jugador1:
+                txt = "jugador 1"
+            else:
+                txt = "jugador 2"
+            elGanador.setTexto("Ganador: " + txt)
+            screen.blit(elGanador.text,(350,350))
         
         if comenzado: #Si ya empezó
             x = x - velocidadTotal
@@ -353,4 +373,3 @@ def main():
     pygame.quit()
 if __name__ == "__main__":
     menu()
-    
