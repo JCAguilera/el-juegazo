@@ -24,7 +24,7 @@ Jugadores = 2
 #Carga una imagen
 def load_image(nombre, dir_imagen, alpha=False):
     # Encontramos la ruta completa de la imagen
-    ruta = os.path.join(dir_imagen, nombre)
+    ruta = "images/" + os.path.join(dir_imagen, nombre)
     try:
         image = pygame.image.load(ruta)
     except:
@@ -41,7 +41,7 @@ def load_image(nombre, dir_imagen, alpha=False):
 def selFuente(fuente,tamano,sistema = True):
     if sistema:
         return pygame.font.SysFont(fuente, tamano)
-    return pygame.font.Font(fuente, tamano)
+    return pygame.font.Font("fonts/" + fuente, tamano)
 
 #Crea y renderiza un objeto de dexto con una fuente y un color
 def crearTexto(fuente, texto, colorRGB):
@@ -174,12 +174,13 @@ def menu():
     pygame.display.set_caption(caption)
     clock = pygame.time.Clock()
     
-    imagenJugar1 = pygame.image.load("Boton Jugar 1 Prueba.png")
-    imagenJugar2 = pygame.image.load("Boton Jugar 2 Prueba.png")
-    imagenOpcion1 = pygame.image.load("Boton Opcion 1 recortado.png")
-    imagenOpcion2 = pygame.image.load("Boton Opcion 2 recortado.png")
-    imagenExit1 = pygame.image.load("Boton salir 1.png")
-    imagenExit2 = pygame.image.load("Boton salir 2.png")
+    #Cambiar a funcion load_image
+    imagenJugar1 = pygame.image.load("images/Boton Jugar 1 Prueba.png")
+    imagenJugar2 = pygame.image.load("images/Boton Jugar 2 Prueba.png")
+    imagenOpcion1 = pygame.image.load("images/Boton Opcion 1 recortado.png")
+    imagenOpcion2 = pygame.image.load("images/Boton Opcion 2 recortado.png")
+    imagenExit1 = pygame.image.load("images/Boton salir 1.png")
+    imagenExit2 = pygame.image.load("images/Boton salir 2.png")
   
     
     botonJugar = Boton(imagenJugar1,imagenJugar2, (w)/2, (h-350)/2)
@@ -213,7 +214,7 @@ def main():
     pygame.init()
     
     pygame.mixer.init()
-    pygame.mixer.music.load("BeepBox-Song-Lelu2.midi")
+    pygame.mixer.music.load("sounds/BeepBox-Song-Lelu2.midi")
     pygame.mixer.music.play()
     
     w = Resolucion[0]    
