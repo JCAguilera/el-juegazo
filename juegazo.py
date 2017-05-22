@@ -83,6 +83,33 @@ class Boton(pygame.sprite.Sprite):
         
         pantalla.blit(self.imagen_actual,self.rect)      
 
+#Objeto Ficha
+class Ficha(pygame.sprite.Sprite):
+   
+    def __init__ (self,imagen1,imagen2,x = 0, y = 0):
+        self.x = x
+        self.y = y 
+        self.imagen_normal = pygame.transform.scale(imagen1, (150,150))
+        self.imagen_seleccion = pygame.transform.scale(imagen2, (1000,360))
+        self.imagen_actual = self.imagen_normal
+        self.rect = self.imagen_actual.get_rect()
+        self.rectangulo = self.imagen_actual.get_rect()
+        self.rectangulo.left=x
+        self.rectangulo.top =y
+        self.rect.left=x-(self.rect.right)/2
+        self.rect.top =y-(self.rect.bottom)/2
+              
+    
+    def updateFicha(self,pantalla,cursor):
+        if cursor.colliderect(self.rectangulo):
+            self.imagen_actual = self.imagen_seleccion
+            self.rect.left,self.rect.top = (10,120)           
+        else: 
+            self.imagen_actual = self.imagen_normal
+            self.rect.left,self.rect.top = (self.x,self.y)
+        
+        pantalla.blit(self.imagen_actual,self.rect)
+# 
 #Objeto jugador
 class Jugador(pygame.sprite.Sprite):
     
@@ -181,11 +208,23 @@ def menu():
     imagenOpcion2 = pygame.image.load("images/Boton Opcion 2 recortado.png")
     imagenExit1 = pygame.image.load("images/Boton salir 1.png")
     imagenExit2 = pygame.image.load("images/Boton salir 2.png")
+    ficha1= pygame.image.load("images/ficha1.png")
+    retrato1= pygame.image.load("images/1.png")
+    ficha2= pygame.image.load("images/ficha2.png")
+    retrato2= pygame.image.load("images/2.png")
+    ficha3= pygame.image.load("images/ficha3.png")
+    retrato3= pygame.image.load("images/3.png")
+    ficha4= pygame.image.load("images/ficha4.png")
+    retrato4= pygame.image.load("images/4.png")
   
     
     botonJugar = Boton(imagenJugar1,imagenJugar2, (w)/2, (h-350)/2)
     botonOpcion = Boton(imagenOpcion1, imagenOpcion2 , (w)/2 , (h-100)/2)
     botonExit = Boton(imagenExit1, imagenExit2, (w)/2, (h+150)/2)
+    botonFicha1 = Ficha(retrato1, ficha1, (100), (h-200))
+    botonFicha2 = Ficha(retrato2, ficha2, (300), (h-200))
+    botonFicha3 = Ficha(retrato3, ficha3, (500), (h-200))
+    botonFicha4= Ficha(retrato4, ficha4, (700), (h-200))
     cursor = Cursor()
     
     while True:
@@ -207,6 +246,10 @@ def menu():
         botonJugar.updateBoton(screen, cursor)
         botonOpcion.updateBoton(screen, cursor)
         botonExit.updateBoton(screen, cursor)
+        botonFicha1.updateFicha(screen, cursor)
+        botonFicha2.updateFicha(screen, cursor)
+        botonFicha3.updateFicha(screen, cursor)
+        botonFicha4.updateFicha(screen, cursor)
         pygame.display.update()
         
 #JUEGO
