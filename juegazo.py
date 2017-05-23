@@ -4,10 +4,8 @@ Macrosoft Ltda. Presenta:
 Super Paralympics 2D Simulator 2017
 """
 
-import pygame
+import pygame, os, sys, glob, time
 #from pygame.locals import *
-import os
-import sys
 
 #---------------#
 # Configuración #
@@ -24,7 +22,7 @@ Jugadores = 2
 #Carga una imagen
 def load_image(nombre, dir_imagen, alpha=False):
     # Encontramos la ruta completa de la imagen
-    ruta = "images/" + os.path.join(dir_imagen, nombre)
+    ruta = os.path.join(dir_imagen, nombre)
     try:
         image = pygame.image.load(ruta)
     except:
@@ -115,8 +113,8 @@ class Jugador(pygame.sprite.Sprite):
     
     def __init__(self,control,imagen,pos):
         pygame.sprite.Sprite.__init__(self)
-        image = load_image(imagen,"",True)
-        self.image = pygame.transform.scale(image, (250, 186))
+        image = load_image(imagen,"images",True)
+        self.image = pygame.transform.scale(image, (260, 186))
         self.rect = self.image.get_rect()
         self.control = tecla(control)
         self.velocidad = 0
@@ -127,6 +125,7 @@ class Jugador(pygame.sprite.Sprite):
         self.ganando = False
         self.posicion = 0
         self.t = 0
+        self.move = True
         left = 100
         if pos == 1:
             left += 20
@@ -136,6 +135,18 @@ class Jugador(pygame.sprite.Sprite):
         self.rect.left = left
         self.rect.top = top
         self.posCero = left
+        #animaciones
+        self.initialAnimSpeed = 1
+        self.currentAnimSpeed = self.initialAnimSpeed
+        self.anim = sorted(glob.glob("images/animations/AtletaUno_*.png"))
+        self.gameAnim = sorted(glob.glob("images/animations/AtletaUnoA_*.png"))
+        self.anim.sort()
+        self.animPosition = 0
+        self.animMax = len(self.gameAnim) - 1
+        self.animar(0)
+        self.initT = 0
+        self.initAnipos = 0
+        self.initTimes = [0,15]
     
     def acelerar(self):
         self.maximo = 25
@@ -155,9 +166,31 @@ class Jugador(pygame.sprite.Sprite):
         return None
     
     def cambiarImagen(self,nuevaImagen):
-        tmpImg = load_image(nuevaImagen,"",True)
+        tmpImg = load_image(nuevaImagen,"images",True)
         self.image = pygame.transform.scale(tmpImg, (250, 250))
         return None
+        
+    #Animacion del comienzo
+    def animacionInicio(self):
+        self.initTimes[0] += 1
+        if self.initTimes[0] == self.initTimes[1] and self.initAnipos < 15:
+            self.initTimes[1] += 15
+            self.image = pygame.transform.scale(load_image(self.anim[self.initAnipos],"",True), (260, 186))
+            self.initAnipos += 1
+    #Anima al jugador!
+    def animar(self, pos):
+        if pos != 0:
+            self.currentAnimSpeed -= 1
+            #self.x += pos
+            
+        if self.currentAnimSpeed == 0:
+            self.image = pygame.transform.scale(load_image(self.gameAnim[self.animPosition],"",True), (260, 186))
+            self.currentAnimSpeed = self.initialAnimSpeed
+            if self.animPosition == self.animMax:
+                self.animPosition = 0
+            else:
+                self.animPosition += 1
+        #self.screen.blit(self.image, (self.rect.left, self.rect.top))
 
 #Objeto de texto
 class Texto():
@@ -176,7 +209,7 @@ class Texto():
 class Fondo():
     
     def __init__(self,ruta):
-        img = load_image(ruta,"",False)
+        img = load_image(ruta,"images",False)
         self.imagen = pygame.transform.scale(img,(Resolucion[0],Resolucion[1]))
         self.imagen2 = pygame.transform.scale(img,(Resolucion[0],Resolucion[1]))
 
@@ -193,6 +226,10 @@ caption = "Super Paralympics 2D Simulator 2017"
 #MENU
 def menu():
     pygame.init()
+    pygame.mixer.init()
+    
+    pygame.mixer.music.load('sounds/BeepBox-Song-Lelu2.midi')
+    pygame.mixer.music.play(-1)    
     
     w = Resolucion[0]
     h = Resolucion[1]
@@ -255,10 +292,7 @@ def menu():
 #JUEGO
 def main():
     pygame.init()
-    
     pygame.mixer.init()
-    pygame.mixer.music.load("sounds/BeepBox-Song-Lelu2.midi")
-    pygame.mixer.music.play()
     
     w = Resolucion[0]    
     h = Resolucion[1]
@@ -278,14 +312,26 @@ def main():
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
-    jugador1 = Jugador("espacio","atletaunos.png",0)
+    jugador1 = Jugador("espacio","animations/AtletaUno_0.png",0)
     jugador2 = Jugador("arriba","atletadoss.png",1)
     vel = Texto(str(jugador1.velocidad),"Ubuntu",True,20,(0,0,0))
     pos = Texto(str(jugador1.posicion),"Ubuntu",True,20,(0,0,0))
     velT = "Velocidad"
+
+    #Musica y sonidos
+    ready = pygame.mixer.Sound("sounds/ready_set_go.ogg")
+    ready.play()
+    win = pygame.mixer.Sound("sounds/ganador.ogg")
+    pygame.mixer.music.load('sounds/estadio_ambiente.mp3')
+    pygame.mixer.music.play(-1)
+    
     
     velocidadTotal = 0
     comenzado = False
+    iniciado = False
+    contadorIniciado = 0
+    tIniciado = 300
+    winSound = True
     
     easter_egg = ""    
     
@@ -316,23 +362,26 @@ def main():
                     easter_egg += "O"
             if event.type == pygame.KEYDOWN:
                 if event.key == jugador1.control:
-                    jugador1.empezo = True
-                    jugador1.acelerar()
-                    comenzado = True
-                    jugador1.contador = 0
-                    if jugador1.t == 60:
-                        jugador1.t = 1
-                    else:
-                        jugador1.t += 1
+                    if iniciado and jugador1.move:
+                        jugador1.animar(1)
+                        jugador1.empezo = True
+                        jugador1.acelerar()
+                        comenzado = True
+                        jugador1.contador = 0
+                        if jugador1.t == 60:
+                            jugador1.t = 1
+                        else:
+                            jugador1.t += 1
                 if event.key == pygame.K_UP:
-                    jugador2.empezo = True
-                    comenzado = True
-                    jugador2.acelerar()
-                    jugador2.contador = 0
-                    if jugador2.t == 60:
-                        jugador2.t = 1
-                    else:
-                        jugador2.t += 1
+                    if iniciado and jugador2.move:
+                        jugador2.empezo = True
+                        comenzado = True
+                        jugador2.acelerar()
+                        jugador2.contador = 0
+                        if jugador2.t == 60:
+                            jugador2.t = 1
+                        else:
+                            jugador2.t += 1
                 if event.key == pygame.K_ESCAPE:
                     run = False
                 
@@ -359,6 +408,14 @@ def main():
             pl2.draw(screen)
         pl1 = pygame.sprite.RenderPlain(jugador1)
         pl1.draw(screen)
+        
+        if not iniciado:
+            jugador1.animacionInicio()
+        
+        if contadorIniciado == tIniciado:
+            iniciado = True
+        else:
+            contadorIniciado += 1
             
         if jugador1.empezo:
             jugador1.contador += 1
@@ -391,8 +448,18 @@ def main():
                 txt = "jugador 1"
             else:
                 txt = "jugador 2"
-            elGanador.setTexto("Ganador: " + txt)
+            if winSound:
+                win.play()
+                elGanador.setTexto("Ganador: " + txt)
+                winSound = False
             screen.blit(elGanador.text,(350,350))
+        
+        if jugador1.posicion >= 3000:
+            jugador1.move = False
+            jugador1.frenar()
+        if jugador2.posicion >= 3000:
+            jugador2.move = False
+            jugador2.frenar()
         
         if comenzado: #Si ya empezó
             x = x - velocidadTotal
