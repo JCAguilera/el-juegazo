@@ -4,7 +4,7 @@ Macrosoft Ltda. Presenta:
 Super Paralympics 2D Simulator 2017
 """
 
-import pygame, os, sys, glob, time
+import pygame, os, sys, glob
 #from pygame.locals import *
 
 #---------------#
@@ -111,7 +111,7 @@ class Ficha(pygame.sprite.Sprite):
 #Objeto jugador
 class Jugador(pygame.sprite.Sprite):
     
-    def __init__(self,control,imagen,pos):
+    def __init__(self,control,imagen,pos,ID):
         pygame.sprite.Sprite.__init__(self)
         image = load_image(imagen,"images",True)
         self.image = pygame.transform.scale(image, (260, 186))
@@ -135,6 +135,7 @@ class Jugador(pygame.sprite.Sprite):
         self.rect.left = left
         self.rect.top = top
         self.posCero = left
+        self.id = ID
         #animaciones
         self.initialAnimSpeed = 1
         self.currentAnimSpeed = self.initialAnimSpeed
@@ -152,17 +153,17 @@ class Jugador(pygame.sprite.Sprite):
         self.maximo = 25
         if self.velocidad < self.maximo:
             self.velocidad += 0.5
-        self.posicion += self.velocidad
-        return None
+        self.posicion += self.velocidad + 0.5
+        return None    
     
     def frenar(self):
         if self.velocidad > 0:
-            x = self.velocidad%0.2
-            if self.velocidad == x:
+            if self.velocidad%0.5 > 0:
                 self.velocidad = 0
-            else:
-                self.velocidad -= 0.2
-        self.posicion += self.velocidad
+                self.posicion += self.velocidad%0.5
+            else:            
+                self.velocidad -= 0.5
+                self.posicion += self.velocidad - 0.5
         return None
     
     def cambiarImagen(self,nuevaImagen):
@@ -233,6 +234,7 @@ def menu():
     
     w = Resolucion[0]
     h = Resolucion[1]
+    x = w
     
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
@@ -263,6 +265,8 @@ def menu():
     botonFicha3 = Ficha(retrato3, ficha3, (500), (h-200))
     botonFicha4= Ficha(retrato4, ficha4, (700), (h-200))
     cursor = Cursor()
+
+    fondo = Fondo("16-bit-wallpaper-3.jpg.png")    
     
     while True:
         for event in pygame.event.get():
@@ -276,9 +280,14 @@ def menu():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor.colliderect(botonJugar.rect):
                     main()
-    
+        
+        x = x - 2
+        if x <= 0:
+            x = w        
+        
         clock.tick(60)
-        screen.fill((0,0,0))
+        screen.blit(fondo.imagen, (x,0))
+        screen.blit(fondo.imagen2,(x-w,0))
         cursor.update()
         botonJugar.updateBoton(screen, cursor)
         botonOpcion.updateBoton(screen, cursor)
@@ -308,12 +317,12 @@ def main():
     superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))  
     demo = Texto("","Ubuntu",True,10,(0,0,0))
     FPS = Texto("FPS","Ubuntu",True,30,(0,0,0))
-    elGanador = Texto("Ganador: ","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
+    elGanador = Texto("Pulsa ENTER para continuar...","Ubuntu",True,30,(0,0,0))
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
-    jugador1 = Jugador("espacio","animations/AtletaUno_0.png",0)
-    jugador2 = Jugador("arriba","atletadoss.png",1)
+    jugador1 = Jugador("espacio","animations/AtletaUno_0.png",0,1)
+    jugador2 = Jugador("arriba","atletadoss.png",1,2)
     vel = Texto(str(jugador1.velocidad),"Ubuntu",True,20,(0,0,0))
     pos = Texto(str(jugador1.posicion),"Ubuntu",True,20,(0,0,0))
     velT = "Velocidad"
@@ -332,14 +341,15 @@ def main():
     contadorIniciado = 0
     tIniciado = 300
     winSound = True
+    winPL = jugador1    
     
     easter_egg = ""    
     
     run = True
-    while(run):
+    while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run = False
+                pygame.quit()
             if event.type == pygame.KEYUP:
                 #if event.key == jugador1.control:              
                     #Se levanta la tecla
@@ -360,6 +370,9 @@ def main():
                     easter_egg += "T"
                 if event.key == pygame.K_o:
                     easter_egg += "O"
+                if event.key == pygame.K_RETURN:
+                    if not winSound:
+                        run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == jugador1.control:
                     if iniciado and jugador1.move:
@@ -383,7 +396,7 @@ def main():
                         else:
                             jugador2.t += 1
                 if event.key == pygame.K_ESCAPE:
-                    run = False
+                    pygame.quit()
                 
         #Obs: Las imagenes van en orden de fondo -> frente
         screen.blit(fondo.imagen, (x,0))
@@ -430,29 +443,23 @@ def main():
             diferenciaPosicion = jugador1.posicion - jugador2.posicion
             #diferenciaVelocidad = jugador1.velocidad - jugador2.velocidad
             ganador = jugador1
-                
             if diferenciaPosicion > 0: #Jugador 1 Ganando
                 jugador2.rect.left = jugador2.posCero - diferenciaPosicion
                 ganador = jugador1
             elif diferenciaPosicion < 0:
                 jugador1.rect.left = jugador1.posCero + diferenciaPosicion
                 ganador = jugador2
-                
         else:
             ganador = jugador1
         
         velocidadTotal = ganador.velocidad
         
-        if ganador.posicion >= 3000:
-            if ganador == jugador1:
-                txt = "jugador 1"
-            else:
-                txt = "jugador 2"
+        if ganador.posicion >= 2000:
             if winSound:
+                winPL = ganador
                 win.play()
-                elGanador.setTexto("Ganador: " + txt)
                 winSound = False
-            screen.blit(elGanador.text,(350,350))
+            screen.blit(elGanador.text,(Resolucion[0] - elGanador.text.get_width() - 10,Resolucion[1] - elGanador.text.get_height() - 10))
         
         if jugador1.posicion >= 3000:
             jugador1.move = False
@@ -481,6 +488,30 @@ def main():
         clock.tick(60)
         pygame.display.flip()
     print("Juanky Was Here!")
-    pygame.quit()
+    winner(winPL)
+def winner(winPL):
+    pygame.init()
+    
+    screen = pygame.display.set_mode((Resolucion[0],Resolucion[1]));
+    clock = pygame.time.Clock()
+    elGanador = Texto("El Ganador es:","Ubuntu",True,20,(0,0,0))
+    jugador = Texto("JUGADOR " + str(winPL.id),"DOCTEURTACOTAC.ttf",False,70,(0,0,0))    
+    enter = Texto("Pulsa ENTER para continuar...","Ubuntu",True,20,(0,0,0))    
+    
+    run = True
+    while run:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_RETURN:
+                    run = False
+        screen.fill((62,197,202))
+        screen.blit(elGanador.text,(Resolucion[0]/2 - elGanador.text.get_width()/2,Resolucion[1]/2 - jugador.text.get_height()/2 - elGanador.text.get_height()))
+        screen.blit(jugador.text,(Resolucion[0]/2 - jugador.text.get_width()/2,Resolucion[1]/2 - jugador.text.get_height()/2))       
+        screen.blit(enter.text,(Resolucion[0]/2 - enter.text.get_width()/2,Resolucion[1] - enter.text.get_height() - 10))        
+        clock.tick(60)
+        pygame.display.flip()
+    menu()
 if __name__ == "__main__":
     menu()
