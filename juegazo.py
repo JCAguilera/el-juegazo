@@ -268,6 +268,10 @@ def menu():
 
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")    
     
+    #Para el efecto FadeOut y cambio de pantalla
+    play = False
+    i = 0
+    
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -279,7 +283,7 @@ def menu():
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor.colliderect(botonJugar.rect):
-                    main()
+                    play = True
         
         x = x - 2
         if x <= 0:
@@ -296,7 +300,18 @@ def menu():
         botonFicha2.updateFicha(screen, cursor)
         botonFicha3.updateFicha(screen, cursor)
         botonFicha4.updateFicha(screen, cursor)
+        #Efecto "Fade Out"
+        if play: #Si se presionó "Jugar"
+            if i<50:
+                s = pygame.Surface((w,h))
+                s.set_alpha(i*10)
+                s.fill((0,0,0))
+                screen.blit(s, (0,0)) 
+                i = i + 1
+            else: #Termina el Fade Out y pasa a la siguiente pantalla
+                break
         pygame.display.update()
+    main()
         
 #JUEGO
 def main():
@@ -346,6 +361,9 @@ def main():
     easter_egg = ""    
     
     run = True
+    
+    i=0 #Para el efecto FadeIn
+    
     while run:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -484,6 +502,14 @@ def main():
             demo.setTexto("help")
             pygame.display.set_caption("donde boto el ramo?")
             velT = "Grinchibilidad"
+        
+        #Efecto FadeIn
+        if i<50:
+            s = pygame.Surface((w,h))
+            s.set_alpha(255-(i*10))
+            s.fill((0,0,0))
+            screen.blit(s, (0,0)) 
+            i = i + 1        
         
         clock.tick(60)
         pygame.display.flip()
