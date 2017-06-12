@@ -257,9 +257,9 @@ def menu():
     retrato4= pygame.image.load("images/4.png")
   
     
-    botonJugar = Boton(imagenJugar1,imagenJugar2, (w)/2, (h-350)/2)
-    botonOpcion = Boton(imagenOpcion1, imagenOpcion2 , (w)/2 , (h-100)/2)
-    botonExit = Boton(imagenExit1, imagenExit2, (w)/2, (h+150)/2)
+    botonJugar = Boton(imagenJugar1,imagenJugar2, (w-450)/2, (h+100)/2)
+    botonOpcion = Boton(imagenOpcion1, imagenOpcion2 , (w)/2 , (h+100)/2)
+    botonExit = Boton(imagenExit1, imagenExit2, (w+450)/2, (h+100)/2)
     botonFicha1 = Ficha(retrato1, ficha1, (100), (h-200))
     botonFicha2 = Ficha(retrato2, ficha2, (300), (h-200))
     botonFicha3 = Ficha(retrato3, ficha3, (500), (h-200))
