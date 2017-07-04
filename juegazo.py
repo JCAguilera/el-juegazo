@@ -13,12 +13,21 @@ import pygame, os, sys, glob
 
 Resolucion = [1024,700]
 Jugadores = 2
+Controles = ["space","up"] #jugador 1, jugador 2
 #Pantalla_Completa = False
 
 #--------------------#
 # Clases y Funciones #
 #--------------------#
 
+#Selecciona una tecla
+def key(nombre):
+    keys = [pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_CLEAR,pygame.K_RETURN,pygame.K_PAUSE,pygame.K_ESCAPE,pygame.K_SPACE,pygame.K_EXCLAIM,pygame.K_QUOTEDBL,pygame.K_HASH,pygame.K_DOLLAR,pygame.K_AMPERSAND,pygame.K_QUOTE,pygame.K_LEFTPAREN,pygame.K_RIGHTPAREN,pygame.K_ASTERISK,pygame.K_PLUS,pygame.K_COMMA,pygame.K_MINUS,pygame.K_PERIOD,pygame.K_SLASH,pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_COLON,pygame.K_SEMICOLON,pygame.K_LESS,pygame.K_EQUALS,pygame.K_GREATER,pygame.K_QUESTION,pygame.K_AT,pygame.K_LEFTBRACKET,pygame.K_BACKSLASH,pygame.K_RIGHTBRACKET,pygame.K_CARET,pygame.K_UNDERSCORE,pygame.K_BACKQUOTE,pygame.K_a,pygame.K_b,pygame.K_c,pygame.K_d,pygame.K_e,pygame.K_f,pygame.K_g,pygame.K_h,pygame.K_i,pygame.K_j,pygame.K_k,pygame.K_l,pygame.K_m,pygame.K_n,pygame.K_o,pygame.K_p,pygame.K_q,pygame.K_r,pygame.K_s,pygame.K_t,pygame.K_u,pygame.K_v,pygame.K_w,pygame.K_x,pygame.K_y,pygame.K_z,pygame.K_DELETE,pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9,pygame.K_KP_PERIOD,pygame.K_KP_DIVIDE,pygame.K_KP_MULTIPLY,pygame.K_KP_MINUS,pygame.K_KP_PLUS,pygame.K_KP_ENTER,pygame.K_KP_EQUALS,pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT]
+    keycodes = ["backspace","tab","clear","return","pause","escape","space","exclaim","quotedbl","hash","dollar","ampersand","quote","left_paren","right_paren","asterisk","plus","comma","minus","period","slash","0","1","2","3","4","5","6","7","8","9","colon","semicolon","less","equals","greater","question","at","left_bracket","backslash","right_bracket","carret","underscore","backquote","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","delete","kp_0","kp_1","kp_2","kp_3","kp_4","kp_5","kp_6","kp_7","kp_8","kp_9","kp_period","kp_divide","kp_multiply","kp_minus","kp_plus","kp_enter","kp_equals","up","down","right","left"]
+    keypos = keycodes.index(nombre)
+    if keypos == -1:
+        print("Tecla no encontrada!")
+    return keys[keypos]
 #Carga una imagen
 def load_image(nombre, dir_imagen, alpha=False):
     # Encontramos la ruta completa de la imagen
@@ -45,13 +54,6 @@ def selFuente(fuente,tamano,sistema = True):
 def crearTexto(fuente, texto, colorRGB):
     text = fuente.render(texto, True, colorRGB)
     return text
-
-def tecla(x):
-    teclas = [["espacio","escape","arriba","abajo","izquierda","derecha","q","w","e","r","t","y","u","i","o","p","a","s","d","f","g","h","j","k","l","z","x","c","v","b","n","m"],
-              [pygame.K_SPACE,pygame.K_ESCAPE,pygame.K_UP,pygame.K_DOWN,pygame.K_LEFT,pygame.K_RIGHT,pygame.K_q,pygame.K_w,pygame.K_e,pygame.K_r,pygame.K_t,pygame.K_y,pygame.K_u,pygame.K_i,pygame.K_o,pygame.K_p,pygame.K_a,pygame.K_s,pygame.K_d,pygame.K_f,pygame.K_g,pygame.K_h,pygame.K_j,pygame.K_k,pygame.K_l,pygame.K_z,pygame.K_x,pygame.K_c,pygame.K_v,pygame.K_b,pygame.K_n,pygame.K_m]]            
-    for i in range(len(teclas)):
-        if x == teclas[0][i]:
-            return teclas[1][i]
 
 #Objeto cursor
 class Cursor(pygame.Rect):
@@ -116,7 +118,7 @@ class Jugador(pygame.sprite.Sprite):
         image = load_image(imagen,"images",True)
         self.image = pygame.transform.scale(image, (260, 186))
         self.rect = self.image.get_rect()
-        self.control = tecla(control)
+        self.control = key(control)
         self.velocidad = 0
         self.contador = 0
         self.presionado = False
@@ -255,8 +257,10 @@ def menu():
     retrato3= pygame.image.load("images/3.png")
     ficha4= pygame.image.load("images/ficha4.png")
     retrato4= pygame.image.load("images/4.png")
+    macrosoft = Texto("Macrosoft Ltda. Presenta:","Ubuntu",True,20,(0,0,0))
+    superw = Texto("Super Paralympics 2D","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
+    superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
   
-    
     botonJugar = Boton(imagenJugar1,imagenJugar2, (w-450)/2, (h+100)/2)
     botonOpcion = Boton(imagenOpcion1, imagenOpcion2 , (w)/2 , (h+100)/2)
     botonExit = Boton(imagenExit1, imagenExit2, (w+450)/2, (h+100)/2)
@@ -292,6 +296,9 @@ def menu():
         clock.tick(60)
         screen.blit(fondo.imagen, (x,0))
         screen.blit(fondo.imagen2,(x-w,0))
+        screen.blit(macrosoft.text,(w/2-macrosoft.text.get_width()/2,50))
+        screen.blit(superw.text,(w/2-superw.text.get_width()/2,120))
+        screen.blit(superw2.text,(w/2-superw2.text.get_width()/2,170))
         cursor.update()
         botonJugar.updateBoton(screen, cursor)
         botonOpcion.updateBoton(screen, cursor)
@@ -327,17 +334,14 @@ def main():
     #pygame.mouse.set_visible(False)
     
     #FORMATO: Texto, Fuente, Sistema, Tamaño, Color RGB
-    macrosoft = Texto("Macrosoft Ltda. Presenta:","Ubuntu",True,20,(0,0,0))
-    superw = Texto("Super Paralympics 2D","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
-    superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))  
     demo = Texto("","Ubuntu",True,10,(0,0,0))
     FPS = Texto("FPS","Ubuntu",True,30,(0,0,0))
     elGanador = Texto("Pulsa ENTER para continuar...","Ubuntu",True,30,(0,0,0))
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
-    jugador1 = Jugador("espacio","animations/AtletaUno_0.png",0,1)
-    jugador2 = Jugador("arriba","atletadoss.png",1,2)
+    jugador1 = Jugador(Controles[0],"animations/AtletaUno_0.png",0,1)
+    jugador2 = Jugador(Controles[1],"atletadoss.png",1,2)
     vel = Texto(str(jugador1.velocidad),"Ubuntu",True,20,(0,0,0))
     pos = Texto(str(jugador1.posicion),"Ubuntu",True,20,(0,0,0))
     velT = "Velocidad"
@@ -420,9 +424,6 @@ def main():
         screen.blit(fondo.imagen, (x,0))
         screen.blit(fondo.imagen2,(x-w,0))
         #Textos
-        screen.blit(macrosoft.text,(20,20))
-        screen.blit(superw.text,(20,50))
-        screen.blit(superw2.text,(20,100))
         screen.blit(demo.text,(500,160))
         #Mostrar Velocidad
         vel.setTexto(velT + " Jugador 1: " + str(round(jugador1.velocidad)) + velT + " Jugador 2: " + str(round(jugador2.velocidad)) + velT + " Total: " + str(round(velocidadTotal)))
