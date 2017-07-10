@@ -20,14 +20,21 @@ Controles = ["space","up"] #jugador 1, jugador 2
 # Clases y Funciones #
 #--------------------#
 
-#Selecciona una tecla
+#Teclas y nombres/codigos
+keys = [pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_CLEAR,pygame.K_RETURN,pygame.K_PAUSE,pygame.K_ESCAPE,pygame.K_SPACE,pygame.K_EXCLAIM,pygame.K_QUOTEDBL,pygame.K_HASH,pygame.K_DOLLAR,pygame.K_AMPERSAND,pygame.K_QUOTE,pygame.K_LEFTPAREN,pygame.K_RIGHTPAREN,pygame.K_ASTERISK,pygame.K_PLUS,pygame.K_COMMA,pygame.K_MINUS,pygame.K_PERIOD,pygame.K_SLASH,pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_COLON,pygame.K_SEMICOLON,pygame.K_LESS,pygame.K_EQUALS,pygame.K_GREATER,pygame.K_QUESTION,pygame.K_AT,pygame.K_LEFTBRACKET,pygame.K_BACKSLASH,pygame.K_RIGHTBRACKET,pygame.K_CARET,pygame.K_UNDERSCORE,pygame.K_BACKQUOTE,pygame.K_a,pygame.K_b,pygame.K_c,pygame.K_d,pygame.K_e,pygame.K_f,pygame.K_g,pygame.K_h,pygame.K_i,pygame.K_j,pygame.K_k,pygame.K_l,pygame.K_m,pygame.K_n,pygame.K_o,pygame.K_p,pygame.K_q,pygame.K_r,pygame.K_s,pygame.K_t,pygame.K_u,pygame.K_v,pygame.K_w,pygame.K_x,pygame.K_y,pygame.K_z,pygame.K_DELETE,pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9,pygame.K_KP_PERIOD,pygame.K_KP_DIVIDE,pygame.K_KP_MULTIPLY,pygame.K_KP_MINUS,pygame.K_KP_PLUS,pygame.K_KP_ENTER,pygame.K_KP_EQUALS,pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT]
+keycodes = ["backspace","tab","clear","return","pause","escape","space","exclaim","quotedbl","hash","dollar","ampersand","quote","left_paren","right_paren","asterisk","plus","comma","minus","period","slash","0","1","2","3","4","5","6","7","8","9","colon","semicolon","less","equals","greater","question","at","left_bracket","backslash","right_bracket","carret","underscore","backquote","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","delete","kp_0","kp_1","kp_2","kp_3","kp_4","kp_5","kp_6","kp_7","kp_8","kp_9","kp_period","kp_divide","kp_multiply","kp_minus","kp_plus","kp_enter","kp_equals","up","down","right","left"]
+#Encontrar tecla a partir de codigo
 def key(nombre):
-    keys = [pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_CLEAR,pygame.K_RETURN,pygame.K_PAUSE,pygame.K_ESCAPE,pygame.K_SPACE,pygame.K_EXCLAIM,pygame.K_QUOTEDBL,pygame.K_HASH,pygame.K_DOLLAR,pygame.K_AMPERSAND,pygame.K_QUOTE,pygame.K_LEFTPAREN,pygame.K_RIGHTPAREN,pygame.K_ASTERISK,pygame.K_PLUS,pygame.K_COMMA,pygame.K_MINUS,pygame.K_PERIOD,pygame.K_SLASH,pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_COLON,pygame.K_SEMICOLON,pygame.K_LESS,pygame.K_EQUALS,pygame.K_GREATER,pygame.K_QUESTION,pygame.K_AT,pygame.K_LEFTBRACKET,pygame.K_BACKSLASH,pygame.K_RIGHTBRACKET,pygame.K_CARET,pygame.K_UNDERSCORE,pygame.K_BACKQUOTE,pygame.K_a,pygame.K_b,pygame.K_c,pygame.K_d,pygame.K_e,pygame.K_f,pygame.K_g,pygame.K_h,pygame.K_i,pygame.K_j,pygame.K_k,pygame.K_l,pygame.K_m,pygame.K_n,pygame.K_o,pygame.K_p,pygame.K_q,pygame.K_r,pygame.K_s,pygame.K_t,pygame.K_u,pygame.K_v,pygame.K_w,pygame.K_x,pygame.K_y,pygame.K_z,pygame.K_DELETE,pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9,pygame.K_KP_PERIOD,pygame.K_KP_DIVIDE,pygame.K_KP_MULTIPLY,pygame.K_KP_MINUS,pygame.K_KP_PLUS,pygame.K_KP_ENTER,pygame.K_KP_EQUALS,pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT]
-    keycodes = ["backspace","tab","clear","return","pause","escape","space","exclaim","quotedbl","hash","dollar","ampersand","quote","left_paren","right_paren","asterisk","plus","comma","minus","period","slash","0","1","2","3","4","5","6","7","8","9","colon","semicolon","less","equals","greater","question","at","left_bracket","backslash","right_bracket","carret","underscore","backquote","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","delete","kp_0","kp_1","kp_2","kp_3","kp_4","kp_5","kp_6","kp_7","kp_8","kp_9","kp_period","kp_divide","kp_multiply","kp_minus","kp_plus","kp_enter","kp_equals","up","down","right","left"]
     keypos = keycodes.index(nombre)
     if keypos == -1:
         print("Tecla no encontrada!")
     return keys[keypos]
+#Encontrar codigo a partir de tecla
+def keyName(key):
+    keypos = keys.index(key)
+    if keypos == -1:
+        print("Tecla no encontrada!")
+    return keycodes[keypos]
 #Carga una imagen
 def load_image(nombre, dir_imagen, alpha=False):
     # Encontramos la ruta completa de la imagen
@@ -67,21 +74,25 @@ class Cursor(pygame.Rect):
 
 #Objeto Boton
 class Boton(pygame.sprite.Sprite):
-   
-    def __init__ (self,imagen1,imagen2,x = 0, y = 0):
-        self.imagen_normal = imagen1
-        self.imagen_seleccion = imagen2
+    #Crea un boton con texto, en una posicion dada
+    def __init__ (self,texto,x,y):
+        self.imagen_normal = load_image("boton.png","images",True)
+        self.imagen_seleccion = load_image("boton_hover.png","images",True)
         self.imagen_actual = self.imagen_normal
+        self.texto = Texto(texto,"Fipps-Regular.otf",False,20,(0,0,0))
         self.rect = self.imagen_actual.get_rect()
-        self.rect.left,self.rect.top = (x-(self.rect.right)/2,y-(self.rect.bottom)/2)
-        
-    
+        self.rect.left,self.rect.top = (x,y)
+    #Cambia el texto del boton
+    def setTexto(self, texto):
+        self.texto.setTexto(texto)
+    #Actualiza el boton
     def updateBoton(self,pantalla,cursor):
         if cursor.colliderect(self.rect):
             self.imagen_actual = self.imagen_seleccion
         else: self.imagen_actual = self.imagen_normal
         
-        pantalla.blit(self.imagen_actual,self.rect)      
+        pantalla.blit(self.imagen_actual,self.rect)
+        pantalla.blit(self.texto.text,(self.rect.left+(self.imagen_actual.get_width()-self.texto.text.get_width())/2,self.rect.top+(self.imagen_actual.get_height()-self.texto.text.get_height())/2))
 
 #Objeto Ficha
 class Ficha(pygame.sprite.Sprite):
@@ -109,7 +120,6 @@ class Ficha(pygame.sprite.Sprite):
             self.rect.left,self.rect.top = (self.x,self.y)
         
         pantalla.blit(self.imagen_actual,self.rect)
-# 
 #Objeto jugador
 class Jugador(pygame.sprite.Sprite):
     
@@ -221,21 +231,59 @@ class Fondo():
 #-----------#
 
 caption = "Super Paralympics 2D Simulator 2017"
+w = Resolucion[0]
+h = Resolucion[1]
 
 #-----------#
 # Principal #
 #-----------#
 
+#INTRO
+def intro():
+    pygame.init()
+    
+    screen = pygame.display.set_mode((w,h))
+    pygame.display.set_caption(caption)
+    clock = pygame.time.Clock()
+    
+    intro = load_image("macrosoft.png","images",False)
+    copy = Texto("© 2017 Macro Software Development","wide_pixel-7.ttf",False,20,(0,0,0))
+    play = False
+    
+    t = 0
+    i=0
+    
+    while True:
+        clock.tick(60)
+        if t < 180:
+            t = t+1
+        else:
+            play = True
+        
+        screen.fill((255,255,255))
+        screen.blit(copy.text,(w/2-copy.text.get_width()/2,h-30))
+        screen.blit(intro,(w/2-intro.get_width()/2,h/2-intro.get_height()/2))
+        
+        if play: #Si se presionó "Jugar"
+            if i<50:
+                s = pygame.Surface((w,h))
+                s.set_alpha(i*10)
+                s.fill((0,0,0))
+                screen.blit(s, (0,0)) 
+                i = i + 1
+            else: #Termina el Fade Out y pasa a la siguiente pantalla
+                break
+        
+        pygame.display.update()
+    menu()
 #MENU
-def menu():
+def menu(musicPos = 0.0):
     pygame.init()
     pygame.mixer.init()
     
-    pygame.mixer.music.load('sounds/BeepBox-Song-Lelu2.midi')
-    pygame.mixer.music.play(-1)    
+    pygame.mixer.music.load('sounds/BeepBox-Song-Lelu2.ogg')
+    pygame.mixer.music.play(-1,musicPos/1000.0)    
     
-    w = Resolucion[0]
-    h = Resolucion[1]
     x = w
     
     screen = pygame.display.set_mode((w,h))
@@ -243,12 +291,6 @@ def menu():
     clock = pygame.time.Clock()
     
     #Cambiar a funcion load_image
-    imagenJugar1 = pygame.image.load("images/Boton Jugar 1 Prueba.png")
-    imagenJugar2 = pygame.image.load("images/Boton Jugar 2 Prueba.png")
-    imagenOpcion1 = pygame.image.load("images/Boton Opcion 1 recortado.png")
-    imagenOpcion2 = pygame.image.load("images/Boton Opcion 2 recortado.png")
-    imagenExit1 = pygame.image.load("images/Boton salir 1.png")
-    imagenExit2 = pygame.image.load("images/Boton salir 2.png")
     ficha1= pygame.image.load("images/ficha1.png")
     retrato1= pygame.image.load("images/1.png")
     ficha2= pygame.image.load("images/ficha2.png")
@@ -261,9 +303,9 @@ def menu():
     superw = Texto("Super Paralympics 2D","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
     superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
   
-    botonJugar = Boton(imagenJugar1,imagenJugar2, (w-450)/2, (h+100)/2)
-    botonOpcion = Boton(imagenOpcion1, imagenOpcion2 , (w)/2 , (h+100)/2)
-    botonExit = Boton(imagenExit1, imagenExit2, (w+450)/2, (h+100)/2)
+    botonJugar = Boton("Jugar",100,300)
+    botonOpcion = Boton("Opciones",(100+w-100-214)/2,300)
+    botonExit = Boton("Salir",w-100-214,300)
     botonFicha1 = Ficha(retrato1, ficha1, (100), (h-200))
     botonFicha2 = Ficha(retrato2, ficha2, (300), (h-200))
     botonFicha3 = Ficha(retrato3, ficha3, (500), (h-200))
@@ -274,7 +316,9 @@ def menu():
     
     #Para el efecto FadeOut y cambio de pantalla
     play = False
-    i = 0
+    action = ""
+    o = 0
+    i = 0    
     
     while True:
         for event in pygame.event.get():
@@ -283,10 +327,13 @@ def menu():
             
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if cursor.colliderect(botonExit.rect):
-                    pygame.quit()
-            
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if cursor.colliderect(botonJugar.rect):
+                    action = "close"
+                    play = True
+                elif cursor.colliderect(botonJugar.rect):
+                    action = "game"
+                    play = True
+                elif cursor.colliderect(botonOpcion.rect):
+                    action = "options"
                     play = True
         
         x = x - 2
@@ -309,24 +356,125 @@ def menu():
         botonFicha4.updateFicha(screen, cursor)
         #Efecto "Fade Out"
         if play: #Si se presionó "Jugar"
-            if i<50:
+            if o<50:
                 s = pygame.Surface((w,h))
-                s.set_alpha(i*10)
+                s.set_alpha(o*10)
                 s.fill((0,0,0))
                 screen.blit(s, (0,0)) 
-                i = i + 1
+                o = o + 1
             else: #Termina el Fade Out y pasa a la siguiente pantalla
                 break
+        #Efecto FadeIn
+        if i<50:
+            s = pygame.Surface((w,h))
+            s.set_alpha(255-(i*10))
+            s.fill((0,0,0))
+            screen.blit(s, (0,0)) 
+            i = i + 1  
         pygame.display.update()
-    main()
+    if action == "game":
+        main()
+    elif action == "options":
+        opciones(pygame.mixer.music.get_pos())
+    elif action == "close":
+        pygame.quit()
+#OPCIONES
+def opciones(musicPos):
+    pygame.init()
+    pygame.mixer.music.load('sounds/BeepBox-Song-Lelu2.ogg')
+    pygame.mixer.music.play(-1,musicPos/1000.0)
+    
+    x = w
+    
+    screen = pygame.display.set_mode((w,h))
+    pygame.display.set_caption(caption)
+    clock = pygame.time.Clock()    
+    
+    title = Texto("OPCIONES","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
+    player1 = Texto("Jugador 1","Ubuntu",True,50,(0,0,0))
+    player2 = Texto("Jugador 2","Ubuntu",True,50,(0,0,0))
+    ins = Texto("Para cambiar la tecla, haz click en el boton del jugador, y pulsa una tecla nueva.","Ubuntu",True,20,(0,0,0))
+    ins2 = Texto("Pulsa ESC para volver al menu.","Ubuntu",True,20,(0,0,0))
+    
+    boton1 = Boton(Controles[0], 200, 250)
+    boton2 = Boton(Controles[1], w-200-player2.text.get_width(), 250)
+    botones = [boton1,boton2]
+
+    fondo = Fondo("16-bit-wallpaper-3.jpg.png")        
+    
+    cursor = Cursor()
+    
+    i=0
+    o=0
+    
+    keyChange = False
+    keyToChange = -1
+    
+    play = False
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE and not keyChange:
+                    play = True                    
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if not keyChange:
+                    if cursor.colliderect(boton1.rect):
+                        keyToChange = 0
+                        keyChange = True
+                        boton1.setTexto("")
+                    elif cursor.colliderect(boton2.rect):
+                        keyToChange = 1
+                        keyChange = True
+                        boton2.setTexto("")
+            if event.type == pygame.KEYDOWN:
+                if keyChange and event.key != pygame.K_ESCAPE:
+                    Controles[keyToChange] = keyName(event.key)
+                    botones[keyToChange].setTexto(Controles[keyToChange])
+                    keyChange = False
+                    keyToChange = -1
         
+        x = x - 2
+        if x <= 0:
+            x = w  
+        
+        clock.tick(60)        
+        screen.blit(fondo.imagen, (x,0))
+        screen.blit(fondo.imagen2,(x-w,0))
+        screen.blit(title.text,(w/2-title.text.get_width()/2,50))
+        screen.blit(player1.text,(200,170))
+        screen.blit(player2.text,(w-player2.text.get_width()-200,170))
+        screen.blit(ins.text,(w/2-ins.text.get_width()/2,380))
+        screen.blit(ins2.text,(w/2-ins2.text.get_width()/2,420))
+        cursor.update()
+        boton1.updateBoton(screen, cursor)
+        boton2.updateBoton(screen, cursor)
+        #Efecto "Fade Out"
+        if play: #Si se presionó "Jugar"
+            if o<50:
+                s = pygame.Surface((w,h))
+                s.set_alpha(o*10)
+                s.fill((0,0,0))
+                screen.blit(s, (0,0)) 
+                o = o + 1
+            else: #Termina el Fade Out y pasa a la siguiente pantalla
+                break            
+        #Efecto FadeIn
+        if i<50:
+            s = pygame.Surface((w,h))
+            s.set_alpha(255-(i*10))
+            s.fill((0,0,0))
+            screen.blit(s, (0,0)) 
+            i = i + 1          
+        
+        pygame.display.update()
+    menu(pygame.mixer.music.get_pos())
 #JUEGO
 def main():
     pygame.init()
     pygame.mixer.init()
     
-    w = Resolucion[0]    
-    h = Resolucion[1]
     x = w    
     
     screen = pygame.display.set_mode((w,h));
@@ -334,9 +482,10 @@ def main():
     #pygame.mouse.set_visible(False)
     
     #FORMATO: Texto, Fuente, Sistema, Tamaño, Color RGB
+    macrosoft = Texto("","Ubuntu",True,20,(0,0,0))
+    superw = Texto("","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
     demo = Texto("","Ubuntu",True,10,(0,0,0))
     FPS = Texto("FPS","Ubuntu",True,30,(0,0,0))
-    elGanador = Texto("Pulsa ENTER para continuar...","Ubuntu",True,30,(0,0,0))
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
@@ -360,13 +509,19 @@ def main():
     contadorIniciado = 0
     tIniciado = 300
     winSound = True
-    winPL = jugador1    
+    winPL = ""
     
-    easter_egg = ""    
+    distancia = 2000
+    
+    easter_egg = ""  
+    easter = False
     
     run = True
     
     i=0 #Para el efecto FadeIn
+    o = 0 #Para el efecto FadeOut
+    t = 0
+    play = False
     
     while run:
         for event in pygame.event.get():
@@ -392,13 +547,11 @@ def main():
                     easter_egg += "T"
                 if event.key == pygame.K_o:
                     easter_egg += "O"
-                if event.key == pygame.K_RETURN:
-                    if not winSound:
-                        run = False
             if event.type == pygame.KEYDOWN:
                 if event.key == jugador1.control:
                     if iniciado and jugador1.move:
-                        jugador1.animar(1)
+                        if not easter:
+                            jugador1.animar(1)
                         jugador1.empezo = True
                         jugador1.acelerar()
                         comenzado = True
@@ -407,7 +560,7 @@ def main():
                             jugador1.t = 1
                         else:
                             jugador1.t += 1
-                if event.key == pygame.K_UP:
+                if event.key == jugador2.control:
                     if iniciado and jugador2.move:
                         jugador2.empezo = True
                         comenzado = True
@@ -418,12 +571,14 @@ def main():
                         else:
                             jugador2.t += 1
                 if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
+                    menu()
                 
         #Obs: Las imagenes van en orden de fondo -> frente
         screen.blit(fondo.imagen, (x,0))
         screen.blit(fondo.imagen2,(x-w,0))
         #Textos
+        screen.blit(macrosoft.text,(20,20))
+        screen.blit(superw.text,(20,50))
         screen.blit(demo.text,(500,160))
         #Mostrar Velocidad
         vel.setTexto(velT + " Jugador 1: " + str(round(jugador1.velocidad)) + velT + " Jugador 2: " + str(round(jugador2.velocidad)) + velT + " Total: " + str(round(velocidadTotal)))
@@ -441,7 +596,7 @@ def main():
         pl1 = pygame.sprite.RenderPlain(jugador1)
         pl1.draw(screen)
         
-        if not iniciado:
+        if not iniciado and not easter:
             jugador1.animacionInicio()
         
         if contadorIniciado == tIniciado:
@@ -473,17 +628,20 @@ def main():
         
         velocidadTotal = ganador.velocidad
         
-        if ganador.posicion >= 2000:
+        if ganador.posicion >= distancia:
             if winSound:
                 winPL = ganador
                 win.play()
                 winSound = False
-            screen.blit(elGanador.text,(Resolucion[0] - elGanador.text.get_width() - 10,Resolucion[1] - elGanador.text.get_height() - 10))
-        
-        if jugador1.posicion >= 3000:
+            if t < 120:
+                t = t+1
+            else:
+                play = True
+       
+        if jugador1.posicion >= distancia:
             jugador1.move = False
             jugador1.frenar()
-        if jugador2.posicion >= 3000:
+        if jugador2.posicion >= distancia:
             jugador2.move = False
             jugador2.frenar()
         
@@ -494,6 +652,7 @@ def main():
         
         #Easter egg "Grinchito"
         if easter_egg == "GRINCHITO":
+            easter = True
             easter_egg = ""
             jugador1.cambiarImagen("easteregg.png")
             jugador1.rect.top = 400
@@ -503,7 +662,16 @@ def main():
             demo.setTexto("help")
             pygame.display.set_caption("donde boto el ramo?")
             velT = "Grinchibilidad"
-        
+        #Efecto FadeOut
+        if play:
+            if o<50:
+                s = pygame.Surface((w,h))
+                s.set_alpha(o*10)
+                s.fill((0,0,0))
+                screen.blit(s, (0,0)) 
+                o = o + 1
+            else: #Termina el Fade Out y pasa a la siguiente pantalla
+                break  
         #Efecto FadeIn
         if i<50:
             s = pygame.Surface((w,h))
@@ -519,12 +687,15 @@ def main():
 def winner(winPL):
     pygame.init()
     
-    screen = pygame.display.set_mode((Resolucion[0],Resolucion[1]));
+    screen = pygame.display.set_mode((w,h));
     clock = pygame.time.Clock()
     elGanador = Texto("El Ganador es:","Ubuntu",True,20,(0,0,0))
     jugador = Texto("JUGADOR " + str(winPL.id),"DOCTEURTACOTAC.ttf",False,70,(0,0,0))    
     enter = Texto("Pulsa ENTER para continuar...","Ubuntu",True,20,(0,0,0))    
     
+    i = 0
+    o = 0
+    play = False
     run = True
     while run:
         for event in pygame.event.get():
@@ -532,13 +703,30 @@ def winner(winPL):
                 pygame.quit()
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_RETURN:
-                    run = False
+                    play = True
         screen.fill((62,197,202))
         screen.blit(elGanador.text,(Resolucion[0]/2 - elGanador.text.get_width()/2,Resolucion[1]/2 - jugador.text.get_height()/2 - elGanador.text.get_height()))
         screen.blit(jugador.text,(Resolucion[0]/2 - jugador.text.get_width()/2,Resolucion[1]/2 - jugador.text.get_height()/2))       
         screen.blit(enter.text,(Resolucion[0]/2 - enter.text.get_width()/2,Resolucion[1] - enter.text.get_height() - 10))        
         clock.tick(60)
+        if play: #Si se presionó "Jugar"
+            if o<50:
+                s = pygame.Surface((w,h))
+                s.set_alpha(o*10)
+                s.fill((0,0,0))
+                screen.blit(s, (0,0)) 
+                o = o + 1
+            else: #Termina el Fade Out y pasa a la siguiente pantalla
+                break
+        #Efecto FadeIn
+        if i<50:
+            s = pygame.Surface((w,h))
+            s.set_alpha(255-(i*10))
+            s.fill((0,0,0))
+            screen.blit(s, (0,0)) 
+            i = i + 1 
+        
         pygame.display.flip()
     menu()
 if __name__ == "__main__":
-    menu()
+    intro()
