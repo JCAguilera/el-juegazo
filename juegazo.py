@@ -153,8 +153,12 @@ class Jugador(pygame.sprite.Sprite):
         #animaciones
         self.initialAnimSpeed = 1
         self.currentAnimSpeed = self.initialAnimSpeed
-        self.anim = sorted(glob.glob("images/animations/AtletaUno_*.png"))
-        self.gameAnim = sorted(glob.glob("images/animations/AtletaUnoA_*.png"))
+        if ID ==1:
+            self.anim = sorted(glob.glob("images/animations/AtletaUno_*.png"))
+            self.gameAnim = sorted(glob.glob("images/animations/AtletaUnoA_*.png"))
+        if ID ==2:
+            self.anim = sorted(glob.glob("images/animations/Atleta2_*.png"))
+            self.gameAnim = sorted(glob.glob("images/animations/AnimAtleta2_*.png"))
         self.anim.sort()
         self.animPosition = 0
         self.animMax = len(self.gameAnim) - 1
@@ -507,7 +511,7 @@ def main():
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
     jugador1 = Jugador(Controles[0],"animations/AtletaUno_0.png",0,1)
-    jugador2 = Jugador(Controles[1],"atletadoss.png",1,2)
+    jugador2 = Jugador(Controles[1],"animations/Atleta2_00.png",1,2)
     vel = Texto(str(jugador1.velocidad),"Ubuntu",True,20,(0,0,0))
     pos = Texto(str(jugador1.posicion),"Ubuntu",True,20,(0,0,0))
     velT = "Velocidad"
@@ -575,6 +579,7 @@ def main():
                         comenzado = True
                 if event.key == jugador2.control and Jugadores == 2:
                     if iniciado and jugador2.move:
+                        jugador2.animar(1)
                         jugador2.empezo = True
                         comenzado = True
                         jugador2.acelerar()
@@ -617,6 +622,7 @@ def main():
         
         if not iniciado and not easter:
             jugador1.animacionInicio()
+            jugador2.animacionInicio()
         
         if contadorIniciado == tIniciado:
             iniciado = True
