@@ -14,7 +14,6 @@ import pygame, os, sys, glob, random
 Resolucion = [1024,700]
 Jugadores = 2
 Controles = ["space","up"] #jugador 1, jugador 2
-#Pantalla_Completa = False
 
 #--------------------#
 # Clases y Funciones #
@@ -153,12 +152,8 @@ class Jugador(pygame.sprite.Sprite):
         #animaciones
         self.initialAnimSpeed = 1
         self.currentAnimSpeed = self.initialAnimSpeed
-        if ID ==1:
-            self.anim = sorted(glob.glob("images/animations/AtletaUno_*.png"))
-            self.gameAnim = sorted(glob.glob("images/animations/AtletaUnoA_*.png"))
-        if ID ==2:
-            self.anim = sorted(glob.glob("images/animations/Atleta2_*.png"))
-            self.gameAnim = sorted(glob.glob("images/animations/AnimAtleta2_*.png"))
+        self.anim = sorted(glob.glob("images/animations/Atleta"+str(ID)+ "_*.png"))
+        self.gameAnim = sorted(glob.glob("images/animations/AnimAtleta"+str(ID)+"_*.png"))
         self.anim.sort()
         self.animPosition = 0
         self.animMax = len(self.gameAnim) - 1
@@ -214,7 +209,6 @@ class Jugador(pygame.sprite.Sprite):
                 self.animPosition = 0
             else:
                 self.animPosition += 1
-        #self.screen.blit(self.image, (self.rect.left, self.rect.top))
 
 #Objeto de texto
 class Texto():
@@ -255,7 +249,7 @@ def check():
     if Jugadores < 0 or Jugadores > 2:
         sys.exit("Sólo 1 o 2 Jugadores!")
     for i in Controles:
-        test = key(i)
+        key(i)
     print("Revision completada.")
     print("Iniciando juego...")
     intro()
@@ -272,7 +266,7 @@ def intro():
     play = False
     
     t = 0
-    i=0
+    i = 0
     
     while True:
         clock.tick(60)
@@ -510,8 +504,8 @@ def main():
     
     fondo = Fondo("16-bit-wallpaper-3.jpg.png")
     
-    jugador1 = Jugador(Controles[0],"animations/AtletaUno_0.png",0,1)
-    jugador2 = Jugador(Controles[1],"animations/Atleta2_00.png",1,2)
+    jugador1 = Jugador(Controles[0],"animations/Atleta1_0.png",0,1)
+    jugador2 = Jugador(Controles[1],"animations/Atleta2_0.png",1,2)
     vel = Texto(str(jugador1.velocidad),"Ubuntu",True,20,(0,0,0))
     pos = Texto(str(jugador1.posicion),"Ubuntu",True,20,(0,0,0))
     velT = "Velocidad"
@@ -754,3 +748,4 @@ def winner(winPL):
 if __name__ == "__main__":
     check()
 print("Juanky Was Here!")
+input("Pulsa ENTER para continuar...")
