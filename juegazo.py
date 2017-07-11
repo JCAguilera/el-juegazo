@@ -4,7 +4,7 @@ Macrosoft Ltda. Presenta:
 Super Paralympics 2D Simulator 2017
 """
 
-import pygame, os, sys, glob
+import pygame, os, sys, glob, random
 #from pygame.locals import *
 
 #---------------#
@@ -25,15 +25,17 @@ keys = [pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_CLEAR,pygame.K_RETURN,pygame.K_
 keycodes = ["backspace","tab","clear","return","pause","escape","space","exclaim","quotedbl","hash","dollar","ampersand","quote","left_paren","right_paren","asterisk","plus","comma","minus","period","slash","0","1","2","3","4","5","6","7","8","9","colon","semicolon","less","equals","greater","question","at","left_bracket","backslash","right_bracket","carret","underscore","backquote","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","delete","kp_0","kp_1","kp_2","kp_3","kp_4","kp_5","kp_6","kp_7","kp_8","kp_9","kp_period","kp_divide","kp_multiply","kp_minus","kp_plus","kp_enter","kp_equals","up","down","right","left"]
 #Encontrar tecla a partir de codigo
 def key(nombre):
-    keypos = keycodes.index(nombre)
-    if keypos == -1:
-        print("Tecla no encontrada!")
+    try: 
+        keypos = keycodes.index(nombre)
+    except ValueError:
+        sys.exit("Tecla '" + nombre + "' no encontrada!")
     return keys[keypos]
 #Encontrar codigo a partir de tecla
 def keyName(key):
-    keypos = keys.index(key)
-    if keypos == -1:
-        print("Tecla no encontrada!")
+    try:    
+        keypos = keys.index(key)
+    except ValueError:
+        sys.exit("Tecla " + str(key) + " no registrada!")
     return keycodes[keypos]
 #Carga una imagen
 def load_image(nombre, dir_imagen, alpha=False):
@@ -162,6 +164,11 @@ class Jugador(pygame.sprite.Sprite):
         self.initTimes = [0,15]
     
     def acelerar(self):
+        if self.t == 60:
+            self.t = 1
+        else:
+            self.t += 1
+        self.contador = 0
         self.maximo = 25
         if self.velocidad < self.maximo:
             self.velocidad += 0.5
@@ -238,6 +245,16 @@ h = Resolucion[1]
 # Principal #
 #-----------#
 
+#CHECK (Comprobar opciones y variables)
+def check():
+    print("Checkeando configuración...")
+    if Jugadores < 0 or Jugadores > 2:
+        sys.exit("Sólo 1 o 2 Jugadores!")
+    for i in Controles:
+        test = key(i)
+    print("Revision completada.")
+    print("Iniciando juego...")
+    intro()
 #INTRO
 def intro():
     pygame.init()
@@ -516,6 +533,9 @@ def main():
     easter_egg = ""  
     easter = False
     
+    ganador = ""
+    botPress = False
+    
     run = True
     
     i=0 #Para el efecto FadeIn
@@ -528,8 +548,6 @@ def main():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYUP:
-                #if event.key == jugador1.control:              
-                    #Se levanta la tecla
                 if event.key == pygame.K_g:
                     easter_egg = ""
                     easter_egg += "G"
@@ -555,24 +573,26 @@ def main():
                         jugador1.empezo = True
                         jugador1.acelerar()
                         comenzado = True
-                        jugador1.contador = 0
-                        if jugador1.t == 60:
-                            jugador1.t = 1
-                        else:
-                            jugador1.t += 1
-                if event.key == jugador2.control:
+                if event.key == jugador2.control and Jugadores == 2:
                     if iniciado and jugador2.move:
                         jugador2.empezo = True
                         comenzado = True
                         jugador2.acelerar()
-                        jugador2.contador = 0
-                        if jugador2.t == 60:
-                            jugador2.t = 1
-                        else:
-                            jugador2.t += 1
+                        
                 if event.key == pygame.K_ESCAPE:
                     menu()
+        
+        if Jugadores == 1 and iniciado:
+            r = random.random()
+            if r > 0.85:
+                botPress = True
                 
+        if botPress:
+            jugador2.empezo = True
+            comenzado = True
+            jugador2.acelerar()
+            botPress = False
+        
         #Obs: Las imagenes van en orden de fondo -> frente
         screen.blit(fondo.imagen, (x,0))
         screen.blit(fondo.imagen2,(x-w,0))
@@ -590,9 +610,8 @@ def main():
         FPS.setTexto("FPS: " + str(round(clock.get_fps(),1)))
         screen.blit(FPS.text,(w-FPS.text.get_width()-20,20))
         #Sprites:
-        if Jugadores == 2:
-            pl2 = pygame.sprite.RenderPlain(jugador2)
-            pl2.draw(screen)
+        pl2 = pygame.sprite.RenderPlain(jugador2)
+        pl2.draw(screen)
         pl1 = pygame.sprite.RenderPlain(jugador1)
         pl1.draw(screen)
         
@@ -608,44 +627,43 @@ def main():
             jugador1.contador += 1
             if jugador1.contador>=60: #Si dejó de presionar
                 jugador1.frenar()
-        if jugador2.empezo and Jugadores == 2:
+        if jugador2.empezo:
             jugador2.contador += 1
             if jugador2.contador>=60: #Si dejó de presionar
                 jugador2.frenar()
                 
-        if Jugadores == 2:  
-            diferenciaPosicion = jugador1.posicion - jugador2.posicion
-            #diferenciaVelocidad = jugador1.velocidad - jugador2.velocidad
+        diferenciaPosicion = jugador1.posicion - jugador2.posicion
+        if diferenciaPosicion > 0: #Jugador 1 Ganando
+            jugador2.rect.left = jugador2.posCero - diferenciaPosicion
             ganador = jugador1
-            if diferenciaPosicion > 0: #Jugador 1 Ganando
-                jugador2.rect.left = jugador2.posCero - diferenciaPosicion
-                ganador = jugador1
-            elif diferenciaPosicion < 0:
-                jugador1.rect.left = jugador1.posCero + diferenciaPosicion
-                ganador = jugador2
+            velocidadTotal = ganador.velocidad
+        elif diferenciaPosicion < 0:
+            jugador1.rect.left = jugador1.posCero + diferenciaPosicion
+            ganador = jugador2
+            velocidadTotal = ganador.velocidad
         else:
-            ganador = jugador1
+            velocidadTotal = 0
         
-        velocidadTotal = ganador.velocidad
-        
-        if ganador.posicion >= distancia:
-            if winSound:
-                winPL = ganador
-                win.play()
-                winSound = False
-            if t < 120:
-                t = t+1
-            else:
-                play = True
-       
-        if jugador1.posicion >= distancia:
-            jugador1.move = False
-            jugador1.frenar()
-        if jugador2.posicion >= distancia:
-            jugador2.move = False
-            jugador2.frenar()
-        
-        if comenzado: #Si ya empezó
+        if comenzado: #Si ya comenzó
+            
+            if ganador != "":
+                if ganador.posicion >= distancia:
+                    if winSound:
+                        winPL = ganador
+                        win.play()
+                        winSound = False
+                    if t < 120:
+                        t = t+1
+                    else:
+                        play = True
+            
+            if jugador1.posicion >= distancia:
+                jugador1.move = False
+                jugador1.frenar()
+            if jugador2.posicion >= distancia:
+                jugador2.move = False
+                jugador2.frenar()
+            
             x = x - velocidadTotal
             if x <= 0:
                 x = w
@@ -682,7 +700,6 @@ def main():
         
         clock.tick(60)
         pygame.display.flip()
-    print("Juanky Was Here!")
     winner(winPL)
 def winner(winPL):
     pygame.init()
@@ -729,4 +746,5 @@ def winner(winPL):
         pygame.display.flip()
     menu()
 if __name__ == "__main__":
-    intro()
+    check()
+print("Juanky Was Here!")
