@@ -7,7 +7,7 @@ El jugador que presione las teclas mas rápido será el ganador de la carrera. L
 Para configurar el juego hay dos opciones: desde el código o del menú de opciones.  
 **Desde el código** puedes cambiar la resolución, los controles y el número de jugadores (1v1 o 1vIA).  
 Y **desde el juego** solo puedes cambiar los controles.  
-Para el **codigo de teclas** ve a la seccion **Códigos de Teclas**.
+Para ver los codigos de las teclas ve a la seccion **Códigos de Teclas**.
 ## Lista de tareas pendientes
 - [x] Prototipo funcional de juego
 - [x] Animaciones básicas
