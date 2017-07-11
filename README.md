@@ -19,6 +19,7 @@ Para ver los codigos de las teclas ve a la seccion **Códigos de Teclas**.
 - [ ] Animaciones de escenario
 - [ ] Pantalla de Ganador
 ## Códigos de Teclas
+**Se recomienda _NO_ configurar ninguna tecla como _ESC_**
 | Código  | Key de Pygame (pygame.\*) | Descripcion | 
 | ------------- | ------------- | ------------- |
 | backspace | K_BACKSPACE  | Backspace/Borrar  |
