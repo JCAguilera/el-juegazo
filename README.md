@@ -14,8 +14,8 @@ Para ver los codigos de las teclas ve a la seccion **Códigos de Teclas**.
 - [x] Menu de Opciones
 - [x] Sonidos y musica
 - [x] Bot e IA
+- [x] Fondo
 - [ ] Fichas de Personajes
-- [ ] Fondo
 - [ ] Animaciones de escenario
 - [ ] Pantalla de Ganador
 ## Códigos de Teclas
