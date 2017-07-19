@@ -43,8 +43,7 @@ def load_image(nombre, dir_imagen, alpha=False):
     try:
         image = pygame.image.load(ruta)
     except:
-        print("Error, no se puede cargar la imagen: " + str(ruta))
-        sys.exit(1)        
+        sys.exit("Error, no se puede cargar la imagen: " + str(ruta))        
     # Comprobar si la imagen tiene "canal alpha" (como los png)
     if alpha == True:
         image = image.convert_alpha()
@@ -141,10 +140,9 @@ class Jugador(pygame.sprite.Sprite):
         self.move = True
         left = 100
         if pos == 1:
-            left += 20
             top = 410
         elif pos == 0:
-            top = 460
+            top = 500
         self.rect.left = left
         self.rect.top = top
         self.posCero = left
@@ -209,6 +207,8 @@ class Jugador(pygame.sprite.Sprite):
                 self.animPosition = 0
             else:
                 self.animPosition += 1
+    def colisiona(self, col):
+        return self.rect.colliderect(col)
 
 #Objeto de texto
 class Texto():
@@ -231,6 +231,30 @@ class Fondo():
         self.imagen = pygame.transform.scale(img,(Resolucion[0],Resolucion[1]))
         self.imagen2 = pygame.transform.scale(img,(Resolucion[0],Resolucion[1]))
 
+#Titulo
+class Title():
+    def __init__(self):
+        self.image = pygame.transform.scale(load_image("title_0.png","images/animations",True), (600,300))
+        self.initialAnimSpeed = 1
+        self.currentAnimSpeed = self.initialAnimSpeed
+        self.anim = sorted(glob.glob("images/animations/title_*.png"))
+        self.anim.sort()
+        self.animPosition = 0
+        self.animMax = len(self.anim) - 1
+        self.animar(0)
+    def animar(self, pos):
+        if pos != 0:
+            self.currentAnimSpeed -= 1
+            
+        if self.currentAnimSpeed == 0:
+            self.image = pygame.transform.scale(load_image(self.anim[self.animPosition],"",True), (600, 300))
+            self.currentAnimSpeed = self.initialAnimSpeed
+            if self.animPosition == self.animMax:
+                self.animPosition = 0
+            else:
+                self.animPosition += 1
+    def update(self, screen, rect):
+        screen.blit(self.image, rect)
 #-----------#
 # Variables #
 #-----------#
@@ -249,7 +273,10 @@ def check():
     if Jugadores < 0 or Jugadores > 2:
         sys.exit("Sólo 1 o 2 Jugadores!")
     for i in Controles:
-        key(i)
+        if i == "escape":
+            sys.exit("No se puede utilizar la tecla escape")
+        else:
+            key(i)
     print("Revision completada.")
     print("Iniciando juego...")
     intro()
@@ -314,26 +341,26 @@ def menu(musicPos = 0.0):
     retrato3= pygame.image.load("images/3.png")
     ficha4= pygame.image.load("images/ficha4.png")
     retrato4= pygame.image.load("images/4.png")
-    macrosoft = Texto("Macrosoft Ltda. Presenta:","Ubuntu",True,20,(0,0,0))
-    superw = Texto("Super Paralympics 2D","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
-    superw2 = Texto("Simulator 2017","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
-  
-    botonJugar = Boton("Jugar",100,300)
-    botonOpcion = Boton("Opciones",(100+w-100-214)/2,300)
-    botonExit = Boton("Salir",w-100-214,300)
+    macrosoft = Texto("Macrosoft Ltda. Presenta:","wide_pixel-7.ttf",False,20,(0,0,0))
+    title = Title()
+    
+    botonJugar = Boton("Jugar",100,350)
+    botonOpcion = Boton("Opciones",(100+w-100-214)/2,350)
+    botonExit = Boton("Salir",w-100-214,350)
     botonFicha1 = Ficha(retrato1, ficha1, (100), (h-200))
     botonFicha2 = Ficha(retrato2, ficha2, (300), (h-200))
     botonFicha3 = Ficha(retrato3, ficha3, (500), (h-200))
     botonFicha4= Ficha(retrato4, ficha4, (700), (h-200))
     cursor = Cursor()
 
-    fondo = Fondo("16-bit-wallpaper-3.jpg.png")    
+    fondo = Fondo("fondo.png")    
     
     #Para el efecto FadeOut y cambio de pantalla
     play = False
     action = ""
     o = 0
     i = 0    
+    titleT = 0
     
     while True:
         for event in pygame.event.get():
@@ -351,6 +378,12 @@ def menu(musicPos = 0.0):
                     action = "options"
                     play = True
         
+        if titleT < 5:
+            titleT+= 1
+        else:
+            title.animar(1)
+            titleT = 0
+        
         x = x - 2
         if x <= 0:
             x = w        
@@ -358,9 +391,8 @@ def menu(musicPos = 0.0):
         clock.tick(60)
         screen.blit(fondo.imagen, (x,0))
         screen.blit(fondo.imagen2,(x-w,0))
-        screen.blit(macrosoft.text,(w/2-macrosoft.text.get_width()/2,50))
-        screen.blit(superw.text,(w/2-superw.text.get_width()/2,120))
-        screen.blit(superw2.text,(w/2-superw2.text.get_width()/2,170))
+        screen.blit(macrosoft.text,(w/2-macrosoft.text.get_width()/2,10))
+        title.update(screen, (200,50))
         cursor.update()
         botonJugar.updateBoton(screen, cursor)
         botonOpcion.updateBoton(screen, cursor)
@@ -415,7 +447,7 @@ def opciones(musicPos):
     boton2 = Boton(Controles[1], w-200-player2.text.get_width(), 250)
     botones = [boton1,boton2]
 
-    fondo = Fondo("16-bit-wallpaper-3.jpg.png")        
+    fondo = Fondo("fondo.png")        
     
     cursor = Cursor()
     
@@ -502,7 +534,12 @@ def main():
     demo = Texto("","Ubuntu",True,10,(0,0,0))
     FPS = Texto("FPS","Ubuntu",True,30,(0,0,0))
     
-    fondo = Fondo("16-bit-wallpaper-3.jpg.png")
+    fondoRegular = Fondo("fondo.png")
+    fondoStart = Fondo("fondo_start.png")
+    fondoEnd = Fondo("fondo_end.png")
+    
+    endRect = fondoEnd.imagen.get_rect()
+    endRect.left,endRect.top = w,0
     
     jugador1 = Jugador(Controles[0],"animations/Atleta1_0.png",0,1)
     jugador2 = Jugador(Controles[1],"animations/Atleta2_0.png",1,2)
@@ -526,7 +563,9 @@ def main():
     winSound = True
     winPL = ""
     
-    distancia = 2000
+    #"Distancia" necesaria para ganar
+    #(Veces que se repite el fondo)
+    distancia = 10
     
     easter_egg = ""  
     easter = False
@@ -535,6 +574,8 @@ def main():
     botPress = False
     
     run = True
+    
+    fondoT = 0
     
     i=0 #Para el efecto FadeIn
     o = 0 #Para el efecto FadeOut
@@ -593,18 +634,27 @@ def main():
             botPress = False
         
         #Obs: Las imagenes van en orden de fondo -> frente
-        screen.blit(fondo.imagen, (x,0))
-        screen.blit(fondo.imagen2,(x-w,0))
+        if fondoT == 0:
+            screen.blit(fondoRegular.imagen, (x,0))
+            screen.blit(fondoStart.imagen,(x-w,0))
+        elif fondoT == distancia:
+            endRect.left = x
+            screen.blit(fondoEnd.imagen, endRect)
+            screen.blit(fondoRegular.imagen,(x-w,0))
+        else:
+            screen.blit(fondoRegular.imagen, (x,0))
+            screen.blit(fondoRegular.imagen2,(x-w,0))
+
         #Textos
         screen.blit(macrosoft.text,(20,20))
         screen.blit(superw.text,(20,50))
         screen.blit(demo.text,(500,160))
         #Mostrar Velocidad
         vel.setTexto(velT + " Jugador 1: " + str(round(jugador1.velocidad)) + velT + " Jugador 2: " + str(round(jugador2.velocidad)) + velT + " Total: " + str(round(velocidadTotal)))
-        screen.blit(vel.text,(20,h-30))
+        #screen.blit(vel.text,(20,h-30))
         #Mostrar Pocición
         pos.setTexto("Posiciones: P1: " + str(jugador1.posicion)+" P2: " + str(jugador2.posicion))
-        screen.blit(pos.text,(20,h-60))        
+        #screen.blit(pos.text,(20,h-60))        
         #Mostrar FPSs
         FPS.setTexto("FPS: " + str(round(clock.get_fps(),1)))
         screen.blit(FPS.text,(w-FPS.text.get_width()-20,20))
@@ -647,7 +697,7 @@ def main():
         if comenzado: #Si ya comenzó
             
             if ganador != "":
-                if ganador.posicion >= distancia:
+                if ganador.colisiona(endRect):
                     if winSound:
                         winPL = ganador
                         win.play()
@@ -656,17 +706,15 @@ def main():
                         t = t+1
                     else:
                         play = True
+                    jugador1.move = False
+                    jugador1.frenar()
+                    jugador2.move = False
+                    jugador2.frenar()
             
-            if jugador1.posicion >= distancia:
-                jugador1.move = False
-                jugador1.frenar()
-            if jugador2.posicion >= distancia:
-                jugador2.move = False
-                jugador2.frenar()
-            
-            x = x - velocidadTotal
+            x -= velocidadTotal
             if x <= 0:
                 x = w
+                fondoT += 1
         
         #Easter egg "Grinchito"
         if easter_egg == "GRINCHITO":
