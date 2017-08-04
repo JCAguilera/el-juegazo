@@ -150,10 +150,15 @@ class Jugador(pygame.sprite.Sprite):
         #animaciones
         self.initialAnimSpeed = 1
         self.currentAnimSpeed = self.initialAnimSpeed
+        self.initialAnimSpeedMeta = 10
+        self.currentAnimSpeedMeta = self.initialAnimSpeedMeta
         self.anim = sorted(glob.glob("images/animations/Atleta"+str(ID)+ "_*.png"))
         self.gameAnim = sorted(glob.glob("images/animations/AnimAtleta"+str(ID)+"_*.png"))
+        self.animGanar = sorted(glob.glob("images/animations/Atleta"+str(ID)+"Gan*.png"))
+        self.animPerder = sorted(glob.glob("images/animations/Atleta"+str(ID)+"Per*.png"))
         self.anim.sort()
         self.animPosition = 0
+        self.animPosMeta = 0
         self.animMax = len(self.gameAnim) - 1
         self.animar(0)
         self.initT = 0
@@ -207,6 +212,25 @@ class Jugador(pygame.sprite.Sprite):
                 self.animPosition = 0
             else:
                 self.animPosition += 1
+    #AnimacionMeta
+    def animacionMeta(self, pos, gano):
+        animaciones = []
+        if gano:
+            animaciones = self.animGanar
+        else:
+            animaciones = self.animPerder
+        if pos != 0:
+            self.currentAnimSpeedMeta -= 1
+            #self.x += pos
+            
+        if self.currentAnimSpeedMeta == 0:
+            self.image = pygame.transform.scale(load_image(animaciones[self.animPosMeta],"",True), (260, 186))
+            self.currentAnimSpeedMeta = self.initialAnimSpeedMeta
+            if self.animPosMeta == 3:
+                self.animPosMeta = 0
+            else:
+                self.animPosMeta += 1
+        
     def colisiona(self, col):
         return self.rect.colliderect(col)
 
@@ -249,7 +273,7 @@ class Title():
         if self.currentAnimSpeed == 0:
             self.image = pygame.transform.scale(load_image(self.anim[self.animPosition],"",True), (600, 300))
             self.currentAnimSpeed = self.initialAnimSpeed
-            if self.animPosition == self.animMax:
+            if self.animPosition == 3:
                 self.animPosition = 0
             else:
                 self.animPosition += 1
@@ -420,11 +444,48 @@ def menu(musicPos = 0.0):
             i = i + 1  
         pygame.display.update()
     if action == "game":
-        main()
+        menuJugadores()
     elif action == "options":
         opciones(pygame.mixer.music.get_pos())
     elif action == "close":
         pygame.quit()
+#MenuJugadores
+def menuJugadores():
+    pygame.init()
+    boton1jugador = Boton("1 jugador", 175, h/2)
+    boton2jugadores = Boton("2 jugadores", w/2+125, h/2)
+    screen = pygame.display.set_mode((w,h))
+    pygame.display.set_caption(caption)
+    fondo = Fondo("fondo.png")
+    clock = pygame.time.Clock()   
+    cursor = Cursor()
+    x=w
+    menu = False
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    menu = True                    
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                    players = 1
+                    if cursor.colliderect(boton2jugadores.rect):
+                        players = 2
+                    main(players)
+                        
+        clock.tick(60)        
+        screen.blit(fondo.imagen, (x,0))
+        screen.blit(fondo.imagen2,(x-w,0))
+        cursor.update()
+        boton1jugador.updateBoton(screen, cursor)
+        boton2jugadores.updateBoton(screen, cursor)
+                        
+        if menu:
+           break
+        pygame.display.update()         
+        
+    
 #OPCIONES
 def opciones(musicPos):
     pygame.init()
@@ -518,7 +579,7 @@ def opciones(musicPos):
         pygame.display.update()
     menu(pygame.mixer.music.get_pos())
 #JUEGO
-def main():
+def main(players = Jugadores):
     pygame.init()
     pygame.mixer.init()
     
@@ -612,7 +673,7 @@ def main():
                         jugador1.empezo = True
                         jugador1.acelerar()
                         comenzado = True
-                if event.key == jugador2.control and Jugadores == 2:
+                if event.key == jugador2.control and players == 2:
                     if iniciado and jugador2.move:
                         jugador2.animar(1)
                         jugador2.empezo = True
@@ -622,7 +683,7 @@ def main():
                 if event.key == pygame.K_ESCAPE:
                     menu()
         
-        if Jugadores == 1 and iniciado:
+        if players == 1 and iniciado:
             r = random.random()
             if r > 0.85:
                 botPress = True
@@ -707,6 +768,8 @@ def main():
                     else:
                         play = True
                     jugador1.move = False
+                    jugador1.animacionMeta(1, ganador == jugador1)
+                    jugador2.animacionMeta(1, ganador == jugador2)
                     jugador1.frenar()
                     jugador2.move = False
                     jugador2.frenar()
