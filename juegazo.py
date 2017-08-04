@@ -469,10 +469,11 @@ def menuJugadores():
                 if event.key == pygame.K_ESCAPE:
                     menu = True                    
             if event.type == pygame.MOUSEBUTTONDOWN:
-                    players = 1
-                    if cursor.colliderect(boton2jugadores.rect):
-                        players = 2
-                    main(players)
+                if cursor.colliderect(boton1jugador.rect):
+                    main(1)
+                if cursor.colliderect(boton2jugadores.rect):
+                    main(2)
+                
                         
         clock.tick(60)        
         screen.blit(fondo.imagen, (x,0))
