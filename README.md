@@ -15,9 +15,9 @@ Para ver los codigos de las teclas ve a la seccion **Códigos de Teclas**.
 - [x] Sonidos y musica
 - [x] Bot e IA
 - [x] Fondo
-- [ ] Fichas de Personajes
-- [ ] Animaciones de escenario
-- [ ] Pantalla de Ganador
+- [x] Fichas de Personajes
+- [x] Animaciones de escenario
+- [x] Pantalla de Ganador
 ## Códigos de Teclas
 **Se recomienda _NO_ configurar ninguna tecla como _ESC_**
 
