@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Macrosoft Ltda. Presenta:
-Super Paralympics 2D Simulator 2017
+Super Paralympics Simulator 2017
 """
 
 import pygame, os, sys, glob, random
