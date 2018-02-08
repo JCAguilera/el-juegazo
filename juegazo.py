@@ -448,6 +448,7 @@ def menu(musicPos = 0.0):
     elif action == "options":
         opciones(pygame.mixer.music.get_pos())
     elif action == "close":
+        print("Gracias por jugar!")
         pygame.quit()
 #MenuJugadores
 def menuJugadores():
@@ -469,11 +470,10 @@ def menuJugadores():
                 if event.key == pygame.K_ESCAPE:
                     menu = True                    
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if cursor.colliderect(boton1jugador.rect):
-                    main(1)
-                if cursor.colliderect(boton2jugadores.rect):
-                    main(2)
-                
+                    players = 1
+                    if cursor.colliderect(boton2jugadores.rect):
+                        players = 2
+                    main(players)
                         
         clock.tick(60)        
         screen.blit(fondo.imagen, (x,0))
