@@ -309,7 +309,10 @@ def intro():
     pygame.init()
     
     screen = pygame.display.set_mode((w,h))
+    #icon
+    icon = load_image('icon.png', 'images', True);
     pygame.display.set_caption(caption)
+    pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
     
     intro = load_image("macrosoft.png","images",False)
