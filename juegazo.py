@@ -284,6 +284,7 @@ class Title():
 #-----------#
 
 caption = "Super Paralympics 2D Simulator 2017"
+icon = load_image('icon.png', 'images', True);
 w = Resolucion[0]
 h = Resolucion[1]
 
@@ -309,8 +310,6 @@ def intro():
     pygame.init()
     
     screen = pygame.display.set_mode((w,h))
-    #icon
-    icon = load_image('icon.png', 'images', True);
     pygame.display.set_caption(caption)
     pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
@@ -357,6 +356,7 @@ def menu(musicPos = 0.0):
     
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
+    pygame.display.set_icon(icon)
     clock = pygame.time.Clock()
     
     #Cambiar a funcion load_image
@@ -460,6 +460,7 @@ def menuJugadores():
     boton2jugadores = Boton("2 jugadores", w/2+125, h/2)
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
+    pygame.display.set_icon(icon)
     fondo = Fondo("fondo.png")
     clock = pygame.time.Clock()   
     cursor = Cursor()
@@ -500,6 +501,7 @@ def opciones(musicPos):
     
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
+    pygame.display.set_icon(icon)
     clock = pygame.time.Clock()    
     
     title = Texto("OPCIONES","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
