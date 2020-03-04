@@ -14,11 +14,15 @@ import pygame, os, sys, glob, random
 Resolucion = [1024,700]
 Jugadores = 2
 Controles = ["space","up"] #jugador 1, jugador 2
+Mostrar_Velocidad = False
 
 #--------------------#
 # Clases y Funciones #
 #--------------------#
 
+#Ícono
+def loadIcon():
+  return load_image('icon.png', 'images', True)
 #Teclas y nombres/codigos
 keys = [pygame.K_BACKSPACE,pygame.K_TAB,pygame.K_CLEAR,pygame.K_RETURN,pygame.K_PAUSE,pygame.K_ESCAPE,pygame.K_SPACE,pygame.K_EXCLAIM,pygame.K_QUOTEDBL,pygame.K_HASH,pygame.K_DOLLAR,pygame.K_AMPERSAND,pygame.K_QUOTE,pygame.K_LEFTPAREN,pygame.K_RIGHTPAREN,pygame.K_ASTERISK,pygame.K_PLUS,pygame.K_COMMA,pygame.K_MINUS,pygame.K_PERIOD,pygame.K_SLASH,pygame.K_0,pygame.K_1,pygame.K_2,pygame.K_3,pygame.K_4,pygame.K_5,pygame.K_6,pygame.K_7,pygame.K_8,pygame.K_9,pygame.K_COLON,pygame.K_SEMICOLON,pygame.K_LESS,pygame.K_EQUALS,pygame.K_GREATER,pygame.K_QUESTION,pygame.K_AT,pygame.K_LEFTBRACKET,pygame.K_BACKSLASH,pygame.K_RIGHTBRACKET,pygame.K_CARET,pygame.K_UNDERSCORE,pygame.K_BACKQUOTE,pygame.K_a,pygame.K_b,pygame.K_c,pygame.K_d,pygame.K_e,pygame.K_f,pygame.K_g,pygame.K_h,pygame.K_i,pygame.K_j,pygame.K_k,pygame.K_l,pygame.K_m,pygame.K_n,pygame.K_o,pygame.K_p,pygame.K_q,pygame.K_r,pygame.K_s,pygame.K_t,pygame.K_u,pygame.K_v,pygame.K_w,pygame.K_x,pygame.K_y,pygame.K_z,pygame.K_DELETE,pygame.K_KP0,pygame.K_KP1,pygame.K_KP2,pygame.K_KP3,pygame.K_KP4,pygame.K_KP5,pygame.K_KP6,pygame.K_KP7,pygame.K_KP8,pygame.K_KP9,pygame.K_KP_PERIOD,pygame.K_KP_DIVIDE,pygame.K_KP_MULTIPLY,pygame.K_KP_MINUS,pygame.K_KP_PLUS,pygame.K_KP_ENTER,pygame.K_KP_EQUALS,pygame.K_UP,pygame.K_DOWN,pygame.K_RIGHT,pygame.K_LEFT]
 keycodes = ["backspace","tab","clear","return","pause","escape","space","exclaim","quotedbl","hash","dollar","ampersand","quote","left_paren","right_paren","asterisk","plus","comma","minus","period","slash","0","1","2","3","4","5","6","7","8","9","colon","semicolon","less","equals","greater","question","at","left_bracket","backslash","right_bracket","caret","underscore","backquote","a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z","delete","kp_0","kp_1","kp_2","kp_3","kp_4","kp_5","kp_6","kp_7","kp_8","kp_9","kp_period","kp_divide","kp_multiply","kp_minus","kp_plus","kp_enter","kp_equals","up","down","right","left"]
@@ -284,7 +288,6 @@ class Title():
 #-----------#
 
 caption = "Super Paralympics 2D Simulator 2017"
-icon = load_image('icon.png', 'images', True);
 w = Resolucion[0]
 h = Resolucion[1]
 
@@ -311,7 +314,7 @@ def intro():
     
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
-    pygame.display.set_icon(icon)
+    pygame.display.set_icon(loadIcon())
     clock = pygame.time.Clock()
     
     intro = load_image("macrosoft.png","images",False)
@@ -356,7 +359,7 @@ def menu(musicPos = 0.0):
     
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
-    pygame.display.set_icon(icon)
+    pygame.display.set_icon(loadIcon())
     clock = pygame.time.Clock()
     
     #Cambiar a funcion load_image
@@ -460,7 +463,7 @@ def menuJugadores():
     boton2jugadores = Boton("2 jugadores", w/2+125, h/2)
     screen = pygame.display.set_mode((w,h))
     pygame.display.set_caption(caption)
-    pygame.display.set_icon(icon)
+    pygame.display.set_icon(loadIcon())
     fondo = Fondo("fondo.png")
     clock = pygame.time.Clock()   
     cursor = Cursor()
@@ -500,8 +503,8 @@ def opciones(musicPos):
     x = w
     
     screen = pygame.display.set_mode((w,h))
-    pygame.display.set_caption(caption)
-    pygame.display.set_icon(icon)
+    pygame.display.set_caption(caption + ' - Opciones')
+    pygame.display.set_icon(loadIcon())
     clock = pygame.time.Clock()    
     
     title = Texto("OPCIONES","DOCTEURTACOTAC.ttf",False,70,(0,0,0))
@@ -591,7 +594,7 @@ def main(players = Jugadores):
     
     x = w    
     
-    screen = pygame.display.set_mode((w,h));
+    screen = pygame.display.set_mode((w,h))
     clock = pygame.time.Clock()
     #pygame.mouse.set_visible(False)
     
@@ -718,7 +721,8 @@ def main(players = Jugadores):
         screen.blit(demo.text,(500,160))
         #Mostrar Velocidad
         vel.setTexto(velT + " Jugador 1: " + str(round(jugador1.velocidad)) + velT + " Jugador 2: " + str(round(jugador2.velocidad)) + velT + " Total: " + str(round(velocidadTotal)))
-        #screen.blit(vel.text,(20,h-30))
+        if Mostrar_Velocidad:
+          screen.blit(vel.text,(20,h-30))
         #Mostrar Pocición
         pos.setTexto("Posiciones: P1: " + str(jugador1.posicion)+" P2: " + str(jugador2.posicion))
         #screen.blit(pos.text,(20,h-60))        
@@ -821,7 +825,7 @@ def main(players = Jugadores):
 def winner(winPL):
     pygame.init()
     
-    screen = pygame.display.set_mode((w,h));
+    screen = pygame.display.set_mode((w,h))
     clock = pygame.time.Clock()
     elGanador = Texto("El Ganador es:","Ubuntu",True,20,(0,0,0))
     jugador = Texto("JUGADOR " + str(winPL.id),"DOCTEURTACOTAC.ttf",False,70,(0,0,0))    
