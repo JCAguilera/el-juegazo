@@ -2,6 +2,7 @@
 """
 Macrosoft Ltda. Presenta:
 Super Paralympics Simulator 2017
+Este es un comentario de prueba
 """
 
 import pygame, os, sys, glob, random
